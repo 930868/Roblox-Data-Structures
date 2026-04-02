@@ -37,7 +37,7 @@ end
 
 function GenericQueueClass:Pop()
 	local value = self.Queue[1]
-	table.remove(self.Queue)
+	table.remove(self.Queue,1)
 	return value
 end
 
