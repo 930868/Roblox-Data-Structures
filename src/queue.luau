@@ -26,16 +26,16 @@ export type GenericQueue<T> = {
 local GenericQueueClass = {}
 GenericQueueClass.__index = GenericQueueClass
 
-function GenericQueueClass.new<T>(value: T): GenericQueue<T>
+function GenericQueueClass.new<T>(): GenericQueue<T>
 	local self = setmetatable({Queue = {}} :: GenericQueue<T>,GenericQueueClass)
 	return self
 end
 
-function GenericQueueClass:Push<T>(value: T): ()
+function GenericQueueClass:Push(value): ()
 	self.Queue[#self.Queue+1] = value
 end
 
-function GenericQueueClass:Pop<T>(): T
+function GenericQueueClass:Pop()
 	local value = self.Queue[1]
 	table.remove(self.Queue)
 	return value
@@ -53,29 +53,17 @@ function GenericQueueClass:Empty(): boolean
 	return (#self.Queue :: {} == 0)
 end
 
-function GenericQueueClass:PushRange<T>(...: T): ()
-	local self: GenericQueue<T> = self
+function GenericQueueClass:PushRange(...): ()
 	local params = {...}
 	for _,param in ipairs(params) do
 		self.Queue[#self.Queue+1] = param
 	end
 end
 
-function GenericQueueClass:Swap<T>(swapQueue: GenericQueue<T>): ()
-	local target,other
-	if self:Size() > swapQueue:Size() then
-		target = self.Queue
-		other = swapQueue.Queue
-	else
-		target = swapQueue.Queue
-		other = self.Queue
-	end
-	
-	for i,v in ipairs(target) do
-		local aux = v
-		target[i] = other[i]
-		other[i] = aux
-	end
+function GenericQueueClass:Swap(swapQueue): ()
+	local aux = self.Queue
+	self.Queue = swapQueue.Queue
+	swapQueue.Queue = aux
 end
 
 function GenericQueueClass:__len(): number
